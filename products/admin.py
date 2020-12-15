@@ -11,3 +11,15 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Brand)
 class BrandAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'create', 'update')
+
+
+@admin.register(ImageGallery)
+class ImageGalleryAdmin(admin.ModelAdmin):
+    list_display = ('image', 'product', 'created', 'updated')
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'brand', 'category', 'slug', 'available', 'sold', 'created', 'updated')
+
+
+
