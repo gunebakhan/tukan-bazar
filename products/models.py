@@ -10,6 +10,7 @@ class Category(models.Model):
 
     name = models.CharField(_("Name"), max_length=200, db_index=True)
     slug = models.SlugField(_("Slug"), max_length=200, unique=True)
+    parent = models.ForeignKey("self", verbose_name=_("Parent"), on_delete=models.SET_NULL, null=True, blank=True, related_query_name='child', related_name='child')
     create = models.DateTimeField(_("Create"), auto_now=False, auto_now_add=True)
     update = models.DateTimeField(_("Update"), auto_now=True, auto_now_add=False)
 
