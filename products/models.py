@@ -33,6 +33,8 @@ class Brand(models.Model):
     slug = models.SlugField(_("Slug"), max_length=200, unique=True)
     create = models.DateTimeField(_("Create"), auto_now=False, auto_now_add=True)
     update = models.DateTimeField(_("Update"), auto_now=True, auto_now_add=False)
+    parent = models.ForeignKey("self", verbose_name=_("Parent"), on_delete=models.SET_NULL, 
+                null=True, blank=True, related_query_name='child', related_name='child')
 
     class Meta:
         ordering = ('name',)

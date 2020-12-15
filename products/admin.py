@@ -7,3 +7,7 @@ from .models import *
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'create', 'update')
 
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'create', 'update')
