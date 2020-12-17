@@ -93,8 +93,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True
     )
 
-    first_name = models.CharField(_('first name'), max_length=150, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.EmailField(_('email address'),
         help_text=_('Enter a valid email address'),
         validators=[email_validator],
@@ -116,7 +114,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
-    avatar = models.ImageField(_("avatar"), upload_to='user/avatars', blank=True, )
     
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
@@ -144,17 +141,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
-    def get_full_name(self):
-        """
-        Return the first_name plus the last_name, with a space in between.
-        """
-        full_name = '%s %s' % (self.first_name, self.last_name)
-        return full_name.strip()
+    # def get_full_name(self):
+    #     """
+    #     Return the first_name plus the last_name, with a space in between.
+    #     """
+    #     full_name = '%s %s' % (self.first_name, self.last_name)
+    #     return full_name.strip()
     
 
-    def get_short_name(self):
-        """Return the short name for the user."""
-        return self.first_name
+    # def get_short_name(self):
+    #     """Return the short name for the user."""
+    #     return self.first_name
     
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
@@ -166,6 +163,38 @@ class User(AbstractBaseUser, PermissionsMixin):
                                                                               email__exact=self.email).exists():
             msg = _("A customer with the e-mail address `{email}` already exists.")
             raise ValidationError({'email': msg.format(email=self.email)})
+
+
+############################### Profile ######################################
+class Profile(models.Model):
+    User = get_user_model()
+
+    first_name = models.CharField(_('first name'), max_length=150, blank=True)
+    last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    avatar = models.ImageField(_("avatar"), upload_to='user/avatars', blank=True, )
+    user = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE, db_index=True, related_name='profile', related_query_name='profile')
+
+    class Meta:
+        verbose_name = _("Profile")
+        verbose_name_plural = _("Profiles")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Profile_detail", kwargs={"pk": self.pk})
+    
+    def get_full_name(self):
+        """
+        Return the first_name plus the last_name, with a space in between.
+        """
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+    
+
+    def get_short_name(self):
+        """Return the short name for the user."""
+        return self.first_name
 
 
 ######### Address model for users ##################
